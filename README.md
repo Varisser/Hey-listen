@@ -1,6 +1,6 @@
 # Hey Listen!
 
-A World of Warcraft Classic addon that warns you when you're forgetting something important.
+An addon for **World of Warcraft: Forever** (interface `16001`) that warns you when you're forgetting something important.
 
 ## Features
 
@@ -12,7 +12,9 @@ A World of Warcraft Classic addon that warns you when you're forgetting somethin
 
 ## Install
 
-Copy the `HeyListen` folder into `World of Warcraft/_classic_era_/Interface/AddOns/`, or the `AddOns` folder of whichever Classic client you play. If the addon shows as "out of date" on the character screen, tick **Load out of date AddOns**. To get your client's interface number, type `/dump select(4, GetBuildInfo())` in game, then add it to the `## Interface:` line in `HeyListen.toc`.
+Copy the `HeyListen` folder into `World of Warcraft/_forever_/Interface/AddOns/`.
+
+The TOC declares `## Interface: 16001` (client 1.60.1). If a patch changes it and the addon shows as "out of date", type `/dump select(4, GetBuildInfo())` in game and put that number in `HeyListen/HeyListen.toc`, or tick **Load out of date AddOns**.
 
 ## Commands
 
@@ -25,8 +27,20 @@ Copy the `HeyListen` folder into `World of Warcraft/_classic_era_/Interface/AddO
 | `/hl swap` | Re-equip your previous weapons |
 | `/hl test` | Preview the fishing pole warning |
 
+## How it works around Forever's combat restrictions
+
+Forever uses the modern addon API, including Midnight's combat restrictions. While you're in combat, the game hides some data from addons ("secret values"). This includes `GetTotemInfo`, and possibly party members' buffs.
+
+- **Out of combat:** totem counts and timers are exact and update twice a second.
+- **Totems placed before the fight:** the timer keeps counting and the last count is shown greyed out with a `?`, such as `3/5?`.
+- **Totems placed during the fight:** the icon and a cooldown sweep still appear, because the game lets hidden values go straight to the display, but the count shows `?` until combat ends.
+- **Combat ends:** everything refreshes immediately.
+
+The fishing pole warning and the quest counter use only your own equipment, combat state and quest log, which aren't hidden.
+
 ## Notes
 
 - Totem buffs are matched by name, so the totem tracker currently works on English clients only.
 - Totems affect only your party, or your subgroup in a raid, so counts include you plus `party1` through `party4`. Dead or offline members are not counted.
-- Quests under collapsed headers in your quest log are not counted.
+- If you destroy a totem early mid-combat, its icon can stay up until combat ends or its timer runs out.
+- Fishing poles are assumed to go in the main-hand slot as in Classic, rather than a profession tool slot.

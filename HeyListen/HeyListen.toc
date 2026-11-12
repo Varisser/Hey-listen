@@ -1,4 +1,4 @@
-## Interface: 11507, 20505
+## Interface: 16001
 ## Title: Hey Listen!
 ## Notes: Warns you when you're forgetting something important (fishing rod equipped, totem coverage, quests ready to turn in).
 ## Author: Hey Listen

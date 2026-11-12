@@ -10,8 +10,9 @@ local WEAPON_CLASS = 2      -- Enum.ItemClass.Weapon
 local FISHING_POLE = 20     -- Enum.ItemWeaponSubclass.Fishingpole
 local SOUND_REPEAT = 4      -- seconds between repeated warning sounds while auto-attacking
 
-local GetItemInfoInstant = (C_Item and C_Item.GetItemInfoInstant) or GetItemInfoInstant
-local EquipItemByName = (C_Item and C_Item.EquipItemByName) or EquipItemByName
+-- WoW Forever uses the modern C_Item API. Fishing poles are Classic-style main-hand weapons.
+local GetItemInfoInstant = C_Item.GetItemInfoInstant
+local EquipItemByName = C_Item.EquipItemByName
 
 local attacking, inCombat = false, false
 local warningActive, lastSound, testUntil = false, 0, 0

@@ -6,26 +6,16 @@ ns.modules.Quests = M
 
 local frame
 
+-- WoW Forever uses the modern quest log API (GetQuestLogTitle no longer exists).
+local IsReady = C_QuestLog.ReadyForTurnIn or C_QuestLog.IsComplete
+
 local function CountReadyQuests()
     local ready = 0
-    if GetQuestLogTitle then
-        -- Classic-style quest log API
-        for i = 1, GetNumQuestLogEntries() do
-            local title, _, _, isHeader, _, isComplete = GetQuestLogTitle(i)
-            if title and not isHeader then
-                -- isComplete: 1 = done, -1 = failed. Quests with no objectives
-                -- ("speak to X", deliveries) can be handed in straight away.
-                if isComplete == 1 or (isComplete == nil and GetNumQuestLeaderBoards(i) == 0) then
-                    ready = ready + 1
-                end
-            end
-        end
-    elseif C_QuestLog and C_QuestLog.GetInfo then
-        for i = 1, C_QuestLog.GetNumQuestLogEntries() do
-            local info = C_QuestLog.GetInfo(i)
-            if info and not info.isHeader and info.questID and C_QuestLog.IsComplete(info.questID) then
-                ready = ready + 1
-            end
+    for i = 1, C_QuestLog.GetNumQuestLogEntries() do
+        local info = C_QuestLog.GetInfo(i)
+        if info and not info.isHeader and not info.isHidden and not info.isTask
+            and not info.isBounty and info.questID and IsReady(info.questID) then
+            ready = ready + 1
         end
     end
     return ready
@@ -57,5 +47,6 @@ function M:Init()
 
     local ev = CreateFrame("Frame")
     ev:RegisterEvent("QUEST_LOG_UPDATE")
+    ev:RegisterEvent("QUEST_TURNED_IN")
     ev:SetScript("OnEvent", function() M:Update() end)
 end

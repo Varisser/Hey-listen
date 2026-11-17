@@ -1,0 +1,11 @@
+## Interface: 16001
+## Title: Death Roll Ledger
+## Notes: Tracks gold won and lost in death rolls, with a running total and a per-player history.
+## Author: Hey Listen
+## Version: 1.0.0
+## SavedVariablesPerCharacter: DeathRollLedgerDB
+
+Core.lua
+Money.lua
+Rolls.lua
+UI.lua
